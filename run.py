@@ -1,11 +1,13 @@
 from multiprocessing import Pool
 import json
-from flask import Flask, make_response, jsonify
+import pytest
+# from flask import Flask, make_response, jsonify
+# app = Flask(__name__)
+#
+#
+# @app.route("/bmi/calculator", methods=['GET'])
 
-app = Flask(__name__)
-
-
-@app.route("/bmi/calculator", methods=['GET'])
+@pytest.fixture
 def bmi_calculator():
     # Loading the input data
     with open('./input.json', 'r') as file:
@@ -23,8 +25,9 @@ def bmi_calculator():
         json.dump(list, file)
         file.close()
     '''
-    response = {'Overweight Count': calculator(base_data)}
-    return make_response(jsonify(response), '200')
+    response = {'Overweight Count': calculator(base_data), 'status': 200}
+    return response
+    # return make_response(response, '200')
 
 
 def calculator(base_data):
@@ -57,7 +60,8 @@ def calculator(base_data):
         return overweight_count
     except Exception as e:
         response = {'errorMessage': str(e)}
-        return make_response(jsonify(response), '500')
+        return response
+        # return make_response(jsonify(response), '500')
 
 
 if __name__ == '__main__':
